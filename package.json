@@ -1,0 +1,11 @@
+{
+  "name": "sertisite-dpl",
+  "version": "1.0.0",
+  "description": "Site for time booking (diplom ed.)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BobNobrain",
+  "license": "MIT"
+}
