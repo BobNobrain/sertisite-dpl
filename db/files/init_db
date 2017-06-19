@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#https://stackoverflow.com/questions/29145370/docker-initialize-mysql-database-with-schema
+
+# Initialize MySQL database.
+# ADD this file into the container via Dockerfile.
+# Assuming you specify a VOLUME ["/var/lib/mysql"] or `-v /var/lib/mysql` on the `docker run` command…
+# Once built, do e.g. `docker run your_image /path/to/docker-mysql-initialize.sh`
+# Again, make sure MySQL is persisting data outside the container for this to have any effect.
+
+set -e
+set -x
+
+mysqld --initialize-insecure --user=root
+mysql_ssl_rsa_setup
+
+# Start the MySQL daemon in the background.
+/usr/sbin/mysqld -u root &
+mysql_pid=$!
+
+until mysqladmin ping -u root >/dev/null 2>&1; do
+  echo -n "."; sleep 0.2
+done
+
+# Permit root login without password from outside container.
+#CREATE USER shippable@localhost IDENTIFIED BY ''; GRANT ALL ON *.* TO shippable@localhost; FLUSH PRIVILEGES;
+mysql -u root -e "CREATE USER root@'%' IDENTIFIED BY ''; GRANT ALL ON *.* TO root@'%'; FLUSH PRIVILEGES;"
+
+# create the default database from the ADDed file.
+mysql < /tmp/deploy.sql
+mysql < /tmp/fake_data.sql
+mysql < /tmp/users.sql
+
+# Tell the MySQL daemon to shutdown.
+mysqladmin shutdown
+
+# Wait for the MySQL daemon to exit.
+wait $mysql_pid
+
+# create a tar file with the database as it currently exists
+tar czvf default_mysql.tar.gz /var/lib/mysql
+
+# the tarfile contains the initialized state of the database.
+# when the container is started, if the database is empty (/var/lib/mysql)
+# then it is unpacked from default_mysql.tar.gz from
+# the ENTRYPOINT /tmp/run_db script
