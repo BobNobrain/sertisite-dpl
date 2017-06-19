@@ -1,12 +1,16 @@
 module.exports = {
 	db: {
-		host: 'localhost', // TODO
+		host: '172.17.0.2',
 		port: 3306,
 		user: 'site',
 		password: '123123',
 		database: 'prod'
 	},
-	apiRoot: '/api',
+	api: {
+		root: '/api',
+		calendar: '/cal',
+		admin: '/admin/ls'
+	},
 	staticRoot: '/',
 	staticFolder: './static'
 };

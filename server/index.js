@@ -1,5 +1,6 @@
 const config = require('./config.js');
 const api = require('./api.js');
+const makeApi = require('./lib/api.js');
 
 const express = require('express');
 
@@ -14,8 +15,13 @@ let serveStatic = require('serve-static');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(serveStatic(path.join(__dirname, config.staticFolder), {'index': ['index.html', 'index.htm']}));
+
+makeApi(app, config.api.root, api);
 
 // error handling
 app.use(function(req, res, next){
