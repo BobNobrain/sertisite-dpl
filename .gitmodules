@@ -1,3 +1,0 @@
-[submodule "db"]
-	path = db
-	url = git@github.com:BobNobrain/sertisite-dpl-db.git
