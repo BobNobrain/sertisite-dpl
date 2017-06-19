@@ -9,7 +9,8 @@ module.exports = {
 	api: {
 		root: '/api',
 		calendar: '/cal',
-		admin: '/admin/ls'
+		admin: '/admin/ls',
+		checkOrg: '/org'
 	},
 	staticRoot: '/',
 	staticFolder: './static'

@@ -11,10 +11,9 @@ const dateToMysql = d => {
 		padZero(d.getUTCDate())
 	].join('-');
 };
-const handleErr = (err, b, c, r) =>
+const handleErr = (err, b, r) =>
 {
 	if (b) console.log(err);
-	c.end();
 	r.status(500);
 	r.send('Internal server error');
 };
@@ -56,7 +55,8 @@ module.exports = {
 				{
 					res.json('2+2 = ' + results[0].four);
 				})
-				.catch(err => handleErr(err, true, conn, res))
+				.catch(err => handleErr(err, true, res))
+				.then(() => conn.end())
 			;
 		}
 	},
@@ -90,7 +90,8 @@ module.exports = {
 					let list = [...r].map(row => ({ date: row.book_date, time: row.book_time }));
 					res.json(list);
 				})
-				.catch(err => handleErr(err, true, conn, res))
+				.catch(err => handleErr(err, true, res))
+				.then(() => conn.end())
 			;
 		},
 		'POST': (req, res) =>
@@ -156,9 +157,43 @@ module.exports = {
 						res.json({ error: true, message: 'This time is already taken!' });
 					}
 					else
-						handleErr(err, true, conn, res)
+						handleErr(err, true, res)
 				})
+				.then(() => conn.end())
 			;
+		}
+	},
+	[config.api.checkOrg]: {
+		'GET': (req, res) =>
+		{
+			let conn = null;
+			let inn = req.query.inn, ogrn = req.query.ogrn;
+			if (inn && ogrn)
+			{
+				return connect(config.db)
+					.then(c =>
+					{
+						conn = c;
+						return query(c,
+							'SELECT name FROM companies WHERE inn = ? AND ogrn = ?',
+							[inn, ogrn]
+						);
+					})
+					.then((r, f) =>
+					{
+						if (r && r.length)
+						{
+							res.json({ result: true, name: r[0].name })
+						}
+						else
+						{
+							res.json({ result: false });
+						}
+					})
+					.catch(err => handleErr(err, true, res))
+					.then(() => conn.end())
+				;
+			}
 		}
 	}
 };
