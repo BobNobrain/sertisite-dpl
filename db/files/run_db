@@ -9,7 +9,21 @@ set -x
 # first, if the /var/lib/mysql directory is empty, unpack it from our predefined db
 [ "$(ls -A /var/lib/mysql)" ] && echo "Running with existing database in /var/lib/mysql" || ( echo 'Populate initial db'; tar xpzvf default_mysql.tar.gz )
 
-ps -e
 # /usr/sbin/mysqld_safe --user root
 # service mysqld start
-/usr/sbin/mysqld --user root
+/usr/sbin/mysqld --user root &
+mysql_pid=$!
+
+sleep 2
+
+# dynamically creating a user for connecting outside the container
+# env DBUSER and DBPASS are passed from outside by docker
+if [ "${DBUSER}." == "." ]; then
+	echo '[ERROR (run_db)]: DBUSER is not set! No user will be created to access outside!'
+elif [ "${DBUSER}." == "." ]; then
+	echo '[ERROR (run_db)]: DBPASS is not set! No user will be created to access outside!'
+else
+	mysql -u root -e "CREATE USER $DBUSER@'%' IDENTIFIED BY '${DBPASS}'; GRANT ALL ON *.* TO $DBUSER@'%'; FLUSH PRIVILEGES;";
+fi
+
+wait $mysql_pid
