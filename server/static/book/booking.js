@@ -79,7 +79,8 @@ BookingDay.prototype.render = function ()
 		timeEls[i] = dom(
 			'li',
 			{
-				'class': this.times[i].booked? 'booked': 'free',
+				'class': (this.times[i].booked? 'booked': 'free') +
+				         (isTimeInPast(this.date, this.times[i].id)? ' inactive' : ''),
 				onclick: 'window.onTimeClicked(this)',
 				'data-id': this.times[i].id
 			},

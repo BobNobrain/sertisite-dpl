@@ -94,7 +94,8 @@
     background: rgba(0, 255, 64, 0.2);
     font-weight: bold;
 }
-.booking-day .body.weekend li {
+.booking-day .body.weekend li,
+.booking-day .body li.inactive {
     background: #fee;
     color: #766;
     pointer-events: none;
