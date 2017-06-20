@@ -2,9 +2,43 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../lib/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/common.css">
+    <link rel="stylesheet" href="style.css">
     <title>Admin panel</title>
+    <script src="../lib/common.js"></script>
+    <script src="admin.js"></script>
 </head>
 <body>
-Hello, admin!
+<header>
+    <div id="hd_background"></div>
+    <nav id="menu">
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/services">Услуги</a></li>
+            <li><a href="/book">Получение ЭП</a></li>
+            <li><a href="/votes">Отзывы</a></li>
+            <li><a href="/contacts">Контакты</a></li>
+        </ul>
+    </nav>
+</header>
+<div id="content">
+    <h1>Поданные заявки</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>ИНН</th>
+            <th>ОГРН</th>
+            <th>Название организации</th>
+            <th>Тип записи</th>
+        </tr>
+        </thead>
+        <tbody id="booking_tbody">
+
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

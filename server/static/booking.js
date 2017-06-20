@@ -48,21 +48,6 @@ window.addEventListener('load', function ()
 	});
 });
 
-function getWorkTimes()
-{
-	var a = new Array(4 * 8); // every 15 minutes, every of 8 work hours
-	for (var i = 0; i < a.length; i++)
-	{
-		var h = 8 + Math.floor(i / 4);
-		if (h > 11) h += 1;
-		if (h < 10) h = '0' + h;
-		var m = 15 * (i % 4);
-		if (m === 0) m = '00';
-		a[i] = h + ':' + m;
-	}
-	return a;
-}
-
 function BookingDay(date, booked)
 {
 	this.date = date;

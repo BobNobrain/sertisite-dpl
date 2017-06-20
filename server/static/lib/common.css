@@ -1,0 +1,30 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+#hd_background {
+    height: 300px;
+    background: #125498;
+}
+
+#menu {
+    padding: 0.5em;
+    border-bottom: 1px solid #125498;
+}
+#menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+#menu li {
+    margin-right: 1em;
+}
+
+#content {
+    min-width: 50em;
+    width: 75%;
+    margin: 1em auto;
+}
