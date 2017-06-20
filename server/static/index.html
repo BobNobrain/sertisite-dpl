@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Booking form</title>
+    <script src="booking.js"></script>
+</head>
+<body>
+<div>
+    <form action="/api/cal" method="post" id="book_form">
+        <div id="org_values">
+            <p>Введите ИНН Вашей организации:</p>
+            <input type="text" name="inn" id="org_inn" placeholder="ИНН">
+            <p>Введите ОГРН Вашей организации:</p>
+            <input type="text" name="ogrn" id="org_ogrn" placeholder="ОГРН">
+            <p>Выберите тип записи:</p>
+            <select>
+                <option value="1">Получение</option>
+                <option value="2">Обновление</option>
+                <option value="3">Отказ</option>
+            </select>
+        </div>
+        <div id="date_time_picker">
+            <div class="head">
+                <button type="button">&lt; Пред.</button>
+                Выберите дату записи:
+                <input type="date" name="date" id="book_date" lang="ru" data-date-format="dd.mm.yyyy">
+                <button type="button">&gt; След.</button>
+            </div>
+            <div class="times">
+                <div class="day">
+                    <p>DAY</p>
+                    <ul id="temp"></ul>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Записаться">
+    </form>
+</div>
+<script src="lib/date.js"></script>
+</body>
+</html>
