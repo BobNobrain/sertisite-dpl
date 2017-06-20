@@ -1,4 +1,8 @@
+#!/bin/bash
+
 cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+npm install
 
 if ! [ -d ./static/lib ]; then
 	mkdir ./static/lib
@@ -28,3 +32,5 @@ for dep in ${deps[@]}; do
         echo "$fname" "already exists"
     fi
 done
+
+cp .gitignore .dockerignore
