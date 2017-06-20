@@ -46,6 +46,8 @@ window.addEventListener('load', function ()
 		el.input.date.valueAsDate = new Date(el.input.date.valueAsDate.getTime() + 1000*60*60*24);
 		updateDay();
 	});
+
+	tryUpdateTypes();
 });
 
 function BookingDay(date, booked)
@@ -200,6 +202,7 @@ function sendRequest()
 		.done(function (result)
 		{
 			alert('Успешная запись компании ' + result.name + '!');
+			window.selectedTime = null;
 			updateDay();
 		})
 		.fail(function (code)
@@ -207,7 +210,38 @@ function sendRequest()
 			if (code === 0)
 				alert('Нет соединения с сервером!');
 			else
-				alert('Ошибка: ' + code.message)
+				alert('Ошибка: ' + code.message);
 		})
 	;
 }
+
+function tryUpdateTypes()
+{
+	if (!window.el) return;
+	if (!window.typesList) return;
+
+	window.el.input.type.innerHTML = '';
+	for (var i = 0; i < window.typesList.length; i++)
+	{
+		window.el.input.type.appendChild(dom(
+			'option',
+			{ value: window.typesList[i].type_id },
+			typesList[i].type
+		));
+	}
+}
+
+xhr('GET', '/api/types', {})
+	.done(function (result)
+	{
+		window.typesList = result;
+		tryUpdateTypes();
+	})
+	.fail(function (code)
+	{
+		if (code === 0)
+			alert('Нет соединения с сервером!');
+		else
+			alert('Ошибка: ' + code.message);
+	})
+;
