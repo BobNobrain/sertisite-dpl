@@ -265,7 +265,6 @@ function isDateInPast(date)
 
 function isTimeInPast(date, timeId)
 {
-	// TODO
 	var n = new Date();
 	if (date.getTime() < n.getTime())
 	{

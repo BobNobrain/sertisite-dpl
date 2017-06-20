@@ -17,6 +17,40 @@ const handleErr = (err, b, r) =>
 	r.status(500);
 	r.send('Internal server error');
 };
+const isTimeInPast = (date, timeId) =>
+{
+	let n = new Date();
+	if (date.getTime() < n.getTime())
+	{
+		// today or past?
+		if (date.getDate() === n.getDate() &&
+			date.getMonth() === n.getMonth() &&
+			date.getFullYear() === n.getFullYear())
+		{
+			// today
+			let hour = 60*60*1000;
+			let time = (timeId - 1 + 8) * hour;
+			if (time > 12 * hour) // мужчина, вы не видите, у нас обед!
+				time += hour;
+
+			time += date.getTime();
+			if (time <= n.getTime())
+				return true; // today, but in the past
+			else
+				return false;
+		}
+		else
+		{
+			// in the past
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
 
 
 // promises
@@ -106,10 +140,16 @@ module.exports = {
 					inn = req.body.inn;
 					ogrn = req.body.ogrn;
 					date = new Date(+req.body.date);
-					time = req.body.time;
-					type = req.body.btype;
+					time = +req.body.time;
+					type = +req.body.btype;
 
 					// TODO: check time
+					if (isTimeInPast(date, time))
+					{
+						res.status(403);
+						res.json({ error: true, message: 'You cannot do booking in past' });
+						return void 0;
+					}
 
 					if (inn && ogrn && req.body.date && time && type)
 					{
