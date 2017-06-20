@@ -195,5 +195,78 @@ module.exports = {
 				;
 			}
 		}
+	},
+	[config.api.admin]: {
+		'GET': (req, res) =>
+		{
+			let conn = null;
+			let dateFrom = null, dateTo = null;
+
+			if (!req.query.dateFrom)
+				dateFrom = new Date();
+			else
+				dateFrom = new Date(+req.query.dateFrom);
+
+			if (!req.query.dateTo)
+				dateTo = new Date(dateFrom.getTime() + 1000*60*60*24);
+			else
+				dateTo = new Date(+req.query.dateTo);
+
+			return connect(config.db)
+				.then(c =>
+				{
+					conn = c;
+					return query(c,
+						`SELECT book_date, book_time,
+							companies.company_id as id, name, inn, ogrn,
+							types.type_id as type_id, type_name
+						FROM (bookings INNER JOIN companies ON bookings.company_id = companies.company_id)
+							INNER JOIN types ON types.type_id = bookings.type_id
+						WHERE book_date >= ? AND book_date < ?`,
+						[dateToMysql(dateFrom), dateToMysql(dateTo)]
+					);
+				})
+				.then((r, f) =>
+				{
+					let list = [...r].map(row => ({
+						date: row.book_date,
+						time: +row.book_time,
+						inn: row.inn,
+						ogrn: row.ogrn,
+						name: row.name,
+						type_id: +row.type_id,
+						type: row.type_name
+					}));
+					res.json(list);
+				})
+				.catch(err => handleErr(err, true, res))
+				.then(() => conn.end())
+			;
+		}
+	},
+	[config.api.types]: {
+		'GET': (req, res) =>
+		{
+			let conn = null;
+			return connect(config.db)
+				.then(c =>
+				{
+					conn = c;
+					return query(c,
+						`SELECT type_id, type_name FROM types`
+					);
+				})
+				.then((r, f) =>
+				{
+					let list = [...r].map(row => ({
+						type_id: +row.type_id,
+						type: row.type_name
+					}));
+					res.json(list);
+				})
+				.catch(err => handleErr(err, true, res))
+				.then(() => conn.end())
+			;
+		}
 	}
 };

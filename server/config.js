@@ -10,7 +10,8 @@ module.exports = {
 		root: '/api',
 		calendar: '/cal',
 		admin: '/admin/ls',
-		checkOrg: '/org'
+		checkOrg: '/org',
+		types: '/types'
 	},
 	staticRoot: '/',
 	staticFolder: './static'
