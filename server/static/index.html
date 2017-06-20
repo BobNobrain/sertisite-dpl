@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
     <link rel="stylesheet" href="lib/common.css">
     <link rel="stylesheet" href="style.css">
     <title>Booking form</title>
@@ -21,35 +22,42 @@
         </ul>
     </nav>
 </header>
-<div>
+<div id="content">
+    <h1>Запись на приём</h1>
     <form action="/api/cal" method="post" id="book_form">
-        <div id="org_values">
-            <p>Введите ИНН Вашей организации:</p>
-            <input type="text" name="inn" id="org_inn" placeholder="ИНН">
-            <p>Введите ОГРН Вашей организации:</p>
-            <input type="text" name="ogrn" id="org_ogrn" placeholder="ОГРН">
-            <p>Выберите тип записи:</p>
-            <select>
-                <option value="1">Получение</option>
-                <option value="2">Обновление</option>
-                <option value="3">Отказ</option>
-            </select>
-        </div>
-        <div id="date_time_picker">
-            <div class="head">
-                <button type="button">&lt; Пред.</button>
-                <span>Выберите дату записи:</span>
-                <input type="date" name="date" id="book_date" lang="ru" data-date-format="dd.mm.yyyy">
-                <button type="button">&gt; След.</button>
+        <div class="columns-grouper">
+            <div id="date_time_picker" class="block">
+                <div class="head">
+                    <button type="button" class="btn btn-primary" id="prev_btn">&lt; Пред.</button>
+                    <span>Выберите дату записи:</span>
+                    <input type="date" name="date" id="book_date"
+                           class="form-control"
+                           lang="ru" data-date-format="dd.mm.yyyy">
+                    <button type="button" class="btn btn-primary" id="next_btn">&gt; След.</button>
+                </div>
+                <div class="times body" id="times_pan">
+                    Загрузка...
+                </div>
             </div>
-            <div class="times" id="times_pan">
-                <div class="day">
-                    <p>DAY</p>
-                    <ul id="temp"></ul>
+            <div id="org_values" class="block">
+                <div class="head">Данные организации</div>
+                <div class="body">
+                    <p>Введите ИНН Вашей организации:</p>
+                    <input type="text" name="inn" id="org_inn" placeholder="ИНН" class="form-control">
+                    <p>Введите ОГРН Вашей организации:</p>
+                    <input type="text" name="ogrn" id="org_ogrn" placeholder="ОГРН" class="form-control">
+                    <p>Выберите тип записи:</p>
+                    <select class="form-control" id="book_type">
+                        <option value="1">Получение</option>
+                        <option value="2">Обновление</option>
+                        <option value="3">Отказ</option>
+                    </select>
                 </div>
             </div>
         </div>
-        <input type="submit" value="Записаться">
+        <div class="submit-wrapper">
+            <input type="submit" value="Записаться" id="submit_book" class="btn btn-success">
+        </div>
     </form>
 </div>
 <script src="lib/date.js"></script>

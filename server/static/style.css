@@ -1,37 +1,112 @@
-#book_form {
-    border-radius: 1em;
-    border: 0.1em solid #eee;
-    padding: 1em;
-    margin: 0 auto;
-    width: 75%;
-    min-width: 50em;
+#book_form .columns-grouper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 #org_values {
+    flex-basis: 40%;
+}
+#org_values .body {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     align-content: stretch;
-    height: 5em;
 }
 #org_values p {
-    height: 1em;
-    width: 25%;
     padding: 0;
     margin: 0.5em 1em;
+    width: auto;
 }
 #org_values input, #org_values select {
     margin: 0 1em;
+    width: auto;
 }
 
 #date_time_picker {
-    width: 100%;
+    flex-basis: 55%;
 }
 
 #date_time_picker .head {
     display: flex;
     align-items: baseline;
     justify-content: center;
+    font-size: medium;
 }
 #date_time_picker .head * {
     margin-right: 1em;
+}
+#date_time_picker .body {
+    padding: 0;
+}
+
+#book_date {
+    width: 10em;
+}
+
+.block {
+    border-radius: 1em;
+    border: 3px solid #125498;
+    padding: 0;
+    overflow: hidden;
+}
+.block > .head {
+    background: #125498;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    padding: 0.5rem;
+}
+.block > .body {
+    padding: 1em;
+}
+
+.booking-day {
+
+}
+.booking-day .head {
+    font-weight: bold;
+    padding: 0.5rem;
+    font-size: large;
+}
+.booking-day .body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-flow: row wrap;
+}
+.booking-day .body li {
+    width: 12.5%;
+    padding: 1em;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.booking-day .body li.free:hover {
+    background: #125498;
+    color: white;
+}
+.booking-day .body li.booked {
+    background: rgba(255, 0, 0, 0.2);
+    cursor: not-allowed;
+}
+.booking-day .body li.selected {
+    background: rgba(0, 255, 64, 0.2);
+    font-weight: bold;
+}
+.booking-day .body.weekend li {
+    background: #fee;
+    color: #766;
+    pointer-events: none;
+}
+
+.submit-wrapper {
+    text-align: right;
+    padding: 0.5em;
+    border-top: 2px solid #eee;
+    margin-top: 0.5em;
+}
+#submit_book {
+    font-size: larger;
+    padding: 1rem 2rem;
 }

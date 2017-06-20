@@ -6,9 +6,9 @@ const noop = () => void 0;
 const padZero = n => +n < 10? n + '' : '0' + n;
 const dateToMysql = d => {
 	return [
-		d.getUTCFullYear(),
-		padZero(d.getUTCMonth() + 1),
-		padZero(d.getUTCDate())
+		d.getFullYear(),
+		padZero(d.getMonth() + 1),
+		padZero(d.getDate())
 	].join('-');
 };
 const handleErr = (err, b, r) =>
@@ -73,6 +73,7 @@ module.exports = {
 						dateFrom = new Date();
 					else
 						dateFrom = new Date(+req.query.dateFrom);
+					console.log(dateFrom);
 
 					if (!req.query.dateTo)
 						dateTo = new Date(dateFrom.getTime() + 1000*60*60*24);
@@ -87,7 +88,8 @@ module.exports = {
 				})
 				.then((r, f) =>
 				{
-					let list = [...r].map(row => ({ date: row.book_date, time: row.book_time }));
+					let list = [...r].map(row => ({ date: row.book_date.getTime(), time: row.book_time }));
+					console.log(list[0]);
 					res.json(list);
 				})
 				.catch(err => handleErr(err, true, res))
