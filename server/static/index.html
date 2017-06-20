@@ -2,11 +2,25 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="lib/common.css">
     <link rel="stylesheet" href="style.css">
     <title>Booking form</title>
+    <script src="lib/common.js"></script>
     <script src="booking.js"></script>
 </head>
 <body>
+<header>
+    <div id="hd_background"></div>
+    <nav id="menu">
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/services">Услуги</a></li>
+            <li><a href="/book">Получение ЭП</a></li>
+            <li><a href="/votes">Отзывы</a></li>
+            <li><a href="/contacts">Контакты</a></li>
+        </ul>
+    </nav>
+</header>
 <div>
     <form action="/api/cal" method="post" id="book_form">
         <div id="org_values">
@@ -24,11 +38,11 @@
         <div id="date_time_picker">
             <div class="head">
                 <button type="button">&lt; Пред.</button>
-                Выберите дату записи:
+                <span>Выберите дату записи:</span>
                 <input type="date" name="date" id="book_date" lang="ru" data-date-format="dd.mm.yyyy">
                 <button type="button">&gt; След.</button>
             </div>
-            <div class="times">
+            <div class="times" id="times_pan">
                 <div class="day">
                     <p>DAY</p>
                     <ul id="temp"></ul>

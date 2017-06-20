@@ -1,0 +1,37 @@
+#book_form {
+    border-radius: 1em;
+    border: 0.1em solid #eee;
+    padding: 1em;
+    margin: 0 auto;
+    width: 75%;
+    min-width: 50em;
+}
+#org_values {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: stretch;
+    height: 5em;
+}
+#org_values p {
+    height: 1em;
+    width: 25%;
+    padding: 0;
+    margin: 0.5em 1em;
+}
+#org_values input, #org_values select {
+    margin: 0 1em;
+}
+
+#date_time_picker {
+    width: 100%;
+}
+
+#date_time_picker .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+#date_time_picker .head * {
+    margin-right: 1em;
+}

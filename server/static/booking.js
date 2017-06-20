@@ -1,31 +1,3 @@
-function dom(tagName, options, content)
-{
-	var result = document.createElement(tagName);
-	if (options && typeof options === typeof {})
-	{
-		for (var key in options)
-		{
-			if (!options.hasOwnProperty(key)) continue;
-			result.setAttribute(key, options[key].toString());
-		}
-	}
-	if (content)
-	{
-		appendContent(result, content);
-	}
-	return result;
-}
-function appendContent(el, content)
-{
-	if (typeof content === typeof '')
-		el.innerHTML = content;
-	else if (content instanceof HTMLElement)
-		el.appendChild(content);
-	else if (Array.isArray(content))
-		content.forEach(function (c) { appendContent(el, c); });
-}
-function elId(id) { return document.getElementById(id); }
-
 window.addEventListener('load', function ()
 {
 	window.el = {
@@ -34,7 +6,7 @@ window.addEventListener('load', function ()
 			inn: elId('org_inn'),
 			ogrn: elId('org_ogrn'),
 			date: elId('book_date'),
-			time: elId('book_time')
+			times: elId('times_pan')
 		}
 	};
 
@@ -43,7 +15,10 @@ window.addEventListener('load', function ()
 		return false;
 	});
 
-	elId('temp').innerHTML = getWorkTimes().map(t => '<li>' + t + '</li>').join('');
+	var d = new Date();
+	var c = getCalendar(d, [[],[],[],[],[]]);
+	el.input.times.innerHTML = '';
+	appendContent(el.input.times, c.render());
 });
 
 function getWorkTimes()
@@ -59,4 +34,76 @@ function getWorkTimes()
 		a[i] = h + ':' + m;
 	}
 	return a;
+}
+
+function BookingDay(date, booked)
+{
+	this.date = date;
+	this.times = getWorkTimes();
+	for (var i = 0; i < this.times.length; i++)
+	{
+		this.times[i] = { id: i+1, time: this.times[i], booked: false };
+		if (booked.indexOf(i+1) !== -1)
+			this.times[i].booked = true;
+	}
+}
+BookingDay.prototype.render = function ()
+{
+	var timeEls = [];
+	for (var i = 0; i < this.times.length; i++)
+	{
+		timeEls[i] = dom(
+			'li',
+			{
+				'class': this.times[i].booked? 'booked': 'free'
+			},
+			dom(
+				'a',
+				{
+					onclick: 'onTimeClicked(this)',
+					'data-id': this.times[i].id
+				},
+				this.times[i].time
+			)
+		);
+	}
+	var dateString = dateStringify(this.date);
+	var we = this.isWeekend()? '' : ' weekend';
+
+	return dom(
+		'div',
+		{
+			'class': 'booking-day'
+		},
+		[
+			dom('div', { 'class': 'head' + we }, dateString),
+			dom('div', { 'class': 'body' + we }, dom(
+				'ul', {},
+				timeEls
+			))
+		]
+	);
+};
+BookingDay.prototype.isWeekend = function () { return this.date.getDay() % 6 === 0 };
+
+function getCalendar(d, bookeds)
+{
+	var result = {};
+	var day = 1000 * 60 * 60 * 24;
+	result['-2'] = new BookingDay(new Date(d.getTime() - 2*day), bookeds[0]);
+	result['-1'] = new BookingDay(new Date(d.getTime() -   day), bookeds[1]);
+	result['0']  = new BookingDay(new Date(d.getTime()        ), bookeds[2]);
+	result['1']  = new BookingDay(new Date(d.getTime() +   day), bookeds[3]);
+	result['2']  = new BookingDay(new Date(d.getTime() + 2*day), bookeds[4]);
+	result.render = function ()
+	{
+		return [
+			this['-2'].render(),
+			this['-1'].render(),
+			this['0'] .render(),
+			this['1'] .render(),
+			this['2'] .render()
+		];
+	};
+	return result;
 }
