@@ -52,7 +52,7 @@ function getWorkTimes()
 function xhr(method, url, data)
 {
 	var x = new XMLHttpRequest();
-	if (method === 'GET')
+	if (method === 'GET' && typeof data === typeof {} && data !== null)
 	{
 		var params = [];
 		for (var key in data)

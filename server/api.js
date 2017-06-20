@@ -3,7 +3,7 @@ const errors = require('http-errors');
 const config = require('./config.js');
 
 const noop = () => void 0;
-const padZero = n => +n < 10? n + '' : '0' + n;
+const padZero = n => +n >= 10? n + '' : '0' + n;
 const dateToMysql = d => {
 	return [
 		d.getFullYear(),

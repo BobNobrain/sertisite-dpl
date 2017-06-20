@@ -22,9 +22,15 @@
         </ul>
     </nav>
 </header>
-<div id="content">
+<div id="content" class="table-responsive">
     <h1>Поданные заявки</h1>
-    <table>
+    <p>
+        Вывести все даты с
+        <input type="date" id="date_from">
+        по (не включая)
+        <input type="date" id="date_to">
+    </p>
+    <table class="table table-stripped table-bordered table-hover">
         <thead>
         <tr>
             <th>Дата</th>
@@ -36,9 +42,10 @@
         </tr>
         </thead>
         <tbody id="booking_tbody">
-
+        <tr><td colspan="6" style="text-align: center;">Загрузка...</td></tr>
         </tbody>
     </table>
 </div>
+<script src="../lib/date.js"></script>
 </body>
 </html>
