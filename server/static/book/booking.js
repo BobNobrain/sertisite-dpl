@@ -27,10 +27,16 @@ window.addEventListener('load', function ()
 
 	el.input.date.addEventListener('change', function ()
 	{
+		var nval = new Date(el.input.date.valueAsDate.getTime() - 1000*60*60*24);
+		if (isDateInPast(nval))
+		{
+			el.input.date.valueAsDate = new Date();
+		}
 		updateDay();
 	});
 
 	el.input.date.valueAsDate = new Date();
+	el.input.date.setAttribute('min', new Date().toISOString().split('T')[0]);
 	updateDay();
 
 	el.input.inn.addEventListener('change', checkInn);
@@ -38,12 +44,16 @@ window.addEventListener('load', function ()
 
 	el.prevDate.addEventListener('click', function ()
 	{
-		el.input.date.valueAsDate = new Date(el.input.date.valueAsDate.getTime() - 1000*60*60*24);
+		var nval = new Date(el.input.date.valueAsDate.getTime() - 1000*60*60*24);
+		if (isDateInPast(nval)) return true;
+		el.input.date.valueAsDate = nval;
 		updateDay();
 	});
 	el.nextDate.addEventListener('click', function ()
 	{
-		el.input.date.valueAsDate = new Date(el.input.date.valueAsDate.getTime() + 1000*60*60*24);
+		var nval = new Date(el.input.date.valueAsDate.getTime() + 1000*60*60*24);
+		// if (isDateInPast(nval)) return true;
+		el.input.date.valueAsDate = nval;
 		updateDay();
 	});
 
@@ -137,7 +147,6 @@ function updateDay()
 				{
 					booked.push(r.time);
 				}
-				console.log(rd, d);
 			}
 			var bd = new BookingDay(d, booked);
 			el.input.times.innerHTML = '';
@@ -162,6 +171,8 @@ function checkForm()
 		alert('Укажите время записи!');
 		return false;
 	}
+	if (isTimeInPast(window.selectedTime.date, window.selectedTime.id))
+		return false;
 
 	return !el.input.inn.validity.customError && !el.input.ogrn.validity.customError;
 }
@@ -245,3 +256,43 @@ xhr('GET', '/api/types', {})
 			alert('Ошибка: ' + code.message);
 	})
 ;
+
+function isDateInPast(date)
+{
+	return isTimeInPast(date, 0);
+}
+
+function isTimeInPast(date, timeId)
+{
+	// TODO
+	var n = new Date();
+	if (date.getTime() < n.getTime())
+	{
+		// today or past?
+		if (date.getDate() === n.getDate() &&
+			date.getMonth() === n.getMonth() &&
+			date.getFullYear() === n.getFullYear())
+		{
+			// today
+			var hour = 60*60*1000;
+			var time = (timeId - 1 + 8) * hour;
+			if (time > 12 * hour) // мужчина, вы не видите, у нас обед!
+				time += hour;
+
+			time += date.getTime();
+			if (time <= n.getTime())
+				return true; // today, but in the past
+			else
+				return false;
+		}
+		else
+		{
+			// in the past
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
